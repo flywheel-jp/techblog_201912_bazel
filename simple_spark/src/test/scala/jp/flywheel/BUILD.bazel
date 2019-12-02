@@ -1,0 +1,25 @@
+# src/test/scala/jp/flywheel/BUILD.bazel
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library", "scala_test")
+
+scala_library(
+    name = "spark_test_deps",
+    testonly = True,
+    exports = [
+        "//src/main/scala/jp/flywheel:spark_deps",
+        "@maven//:org_apache_spark_spark_catalyst_2_12_tests",
+        "@maven//:org_apache_spark_spark_core_2_12_tests",
+        "@maven//:org_apache_spark_spark_sql_2_12_tests",
+    ],
+)
+
+scala_test(
+    name = "word_count_test",
+    srcs = [
+        "WordCountTest.scala",
+    ],
+    deps = [
+        ":spark_test_deps",
+        "//src/main/scala/jp/flywheel:word_count_lib",
+    ],
+)

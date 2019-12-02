@@ -1,0 +1,14 @@
+# src/test/java/jp/flywheel/BUILD.bazel
+
+load("@rules_java//java:defs.bzl", "java_test")
+
+java_test(
+    name = "mylib_test",
+    srcs = [
+        "MyLibTest.java",
+    ],
+    test_class = "jp.flywheel.MyLibTest",
+    deps = [
+        "//src/main/java/jp/flywheel:mylib",
+    ],
+)

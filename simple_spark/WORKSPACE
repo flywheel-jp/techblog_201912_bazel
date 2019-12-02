@@ -1,0 +1,93 @@
+workspace(name = "simple_spark")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Skylib
+
+SKYLIB_TAG = "0.9.0"
+
+SKYLIB_SHA = "9245b0549e88e356cd6a25bf79f97aa19332083890b7ac6481a2affb6ada9752"
+
+http_archive(
+    name = "bazel_skylib",
+    sha256 = SKYLIB_SHA,
+    strip_prefix = "bazel-skylib-%s" % SKYLIB_TAG,
+    url = "https://github.com/bazelbuild/bazel-skylib/archive/%s.tar.gz" % SKYLIB_TAG,
+)
+
+# Protocol Buffers
+
+PROTOBUF_TAG = "3.10.1"
+
+PROTOBUF_SHA = "6adf73fd7f90409e479d6ac86529ade2d45f50494c5c10f539226693cb8fe4f7"
+
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = PROTOBUF_SHA,
+    strip_prefix = "protobuf-%s" % PROTOBUF_TAG,
+    url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % PROTOBUF_TAG,
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+# Scala
+
+RULES_SCALA_VERSION = "ff57530cc6796cdcd4ab0405c5404fad2d2e8923"  # Latest commit as of 2019-11-27.
+
+RULES_SCALA_SHA = "3712768d345917b9a94557a4ab008a89a9488031662ec5ab3d8fb2efa0ed5ec6"
+
+http_archive(
+    name = "io_bazel_rules_scala",
+    sha256 = RULES_SCALA_SHA,
+    strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
+    url = "https://github.com/bazelbuild/rules_scala/archive/%s.zip" % RULES_SCALA_VERSION,
+)
+
+load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+
+scala_register_toolchains()
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+
+scala_repositories(
+    scala_version_shas = (
+        "2.12.8",
+        {
+            "scala_compiler": "f34e9119f45abd41e85b9e121ba19dd9288b3b4af7f7047e86dc70236708d170",
+            "scala_library": "321fb55685635c931eba4bc0d7668349da3f2c09aee2de93a70566066ff25c28",
+            "scala_reflect": "4d6405395c4599ce04cea08ba082339e3e42135de9aae2923c9f5367e957315a",
+        },
+    ),
+)
+
+# Maven
+RULES_JVM_EXTERNAL_TAG = "2.10"
+
+RULES_JVM_EXTERNAL_SHA = "1bbf2e48d07686707dd85357e9a94da775e1dbd7c464272b3664283c9c716d26"
+
+http_archive(
+    name = "rules_jvm_external",
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+)
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    artifacts = [
+        "org.apache.spark:spark-catalyst_2.12:2.4.4",
+        "org.apache.spark:spark-core_2.12:2.4.4",
+        "org.apache.spark:spark-sql_2.12:2.4.4",
+        # For testing.
+        "org.apache.spark:spark-catalyst_2.12:jar:tests:2.4.4",
+        "org.apache.spark:spark-core_2.12:jar:tests:2.4.4",
+        "org.apache.spark:spark-sql_2.12:jar:tests:2.4.4",
+    ],
+    repositories = [
+        "https://jcenter.bintray.com/",
+        "https://repo1.maven.org/maven2",
+    ],
+)

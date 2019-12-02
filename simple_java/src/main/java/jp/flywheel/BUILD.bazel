@@ -1,0 +1,19 @@
+# src/main/java/jp/flywheel/BUILD.bazel
+
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+package(default_visibility = ["//src/test/java/jp/flywheel:__subpackages__"])
+
+java_library(
+    name = "mylib",
+    srcs = ["MyLib.java"],
+)
+
+java_binary(
+    name = "mybin",
+    srcs = ["MyBin.java"],
+    main_class = "jp.flywheel.MyBin",
+    deps = [
+        ":mylib",  # or "//src/main/java/jp/flywheel:mylib",
+    ],
+)
