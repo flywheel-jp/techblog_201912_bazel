@@ -1,2 +1,1 @@
-# techblog_201912_bazel
-code sample for tech blog
+# Code Sample for Tech Blog
