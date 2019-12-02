@@ -1,0 +1,28 @@
+# src/main/scala/jp/flywheel/BUILD.bazel
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_binary", "scala_library")
+
+package(default_visibility = ["//src/test/scala/jp/flywheel:__subpackages__"])
+
+scala_library(
+    name = "spark_deps",
+    exports = [
+        "@maven//:org_apache_spark_spark_catalyst_2_12",
+        "@maven//:org_apache_spark_spark_core_2_12",
+        "@maven//:org_apache_spark_spark_sql_2_12",
+    ],
+)
+
+scala_library(
+    name = "word_count_lib",
+    srcs = ["WordCount.scala"],
+    deps = [
+        ":spark_deps",
+    ],
+)
+
+scala_binary(
+    name = "word_count_bin",
+    main_class = "jp.flywheel.WordCount",
+    runtime_deps = [":word_count_lib"],
+)

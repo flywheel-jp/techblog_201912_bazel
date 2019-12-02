@@ -1,0 +1,2 @@
+# Disable ErrorProne. Not recommended.
+build --javacopt='-XepDisableAllChecks'

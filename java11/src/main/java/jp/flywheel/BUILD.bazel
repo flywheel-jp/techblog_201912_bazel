@@ -1,0 +1,9 @@
+# src/main/java/jp/flywheel/BUILD.bazel
+
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_binary(
+    name = "mybin",
+    srcs = ["MyBin.java"],
+    main_class = "jp.flywheel.MyBin",
+)
